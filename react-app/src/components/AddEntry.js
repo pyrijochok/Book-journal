@@ -6,44 +6,39 @@ export default function AddEntry() {
   let { userId } = useParams()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [date, setDate] = useState('')
-  const [pages,setPages] = useState('')
-  const [text,setText] = useState('')
+//   const [date, setDate] = useState('')
+  const [pages, setPages] = useState('')
+  const [text, setText] = useState('')
   const [rate, setRate] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
 
-  
-  useEffect(()=>{
-      const isAuth = JSON.parse(localStorage.getItem('isAuth'));
-      if(isAuth===false){
-        console.log(isAuth)
-        navigate('/login');
-      }
-    },[])
-
-  
+  useEffect(() => {
+    const isAuth = JSON.parse(localStorage.getItem('isAuth'))
+    if (isAuth === false) {
+      console.log(isAuth)
+      navigate('/')
+    }
+  }, [])
 
   const handleAddEntry = async (e) => {
     e.preventDefault()
     console.log('entryAdded')
     try {
-      const response = await fetch(`/api/addentry/${userId}`, {
+      const response = await fetch(`/api/entry/add/${userId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title,author, date, pages,text,rate })
+        body: JSON.stringify({ title, author, pages, text, rate })
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        console.log(data.entries)
+        console.log(data.result)
         navigate(`/journal/${userId}`)
-      } else {
-        setMessage(data.message)
-      }
+      } 
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('error:', error)
@@ -79,15 +74,6 @@ export default function AddEntry() {
             type="number"
             value={pages}
             onChange={(e) => setPages(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Date:</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
             required
           />
         </div>

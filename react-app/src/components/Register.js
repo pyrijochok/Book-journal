@@ -23,16 +23,17 @@ export default function Register() {
       const data = await response.json()
 
       if (response.ok) {
-        setMessage(`Welcome, ${data.user.nick}!`)
-        console.log(data.usersArray)
-        navigate('/login')
-      } else {
-        setMessage(data.message)
-      }
+        console.log(data.result)
+        navigate('/')
+      } 
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('Registration error:', error)
     }
+  }
+
+  const openLogin = () => {
+    navigate('/')
   }
 
   return (
@@ -68,6 +69,7 @@ export default function Register() {
         </div>
         <button type="submit">Register</button>
       </form>
+      <button onClick={openLogin}>Login</button>
       {message && <p>{message}</p>}
     </div>
   )

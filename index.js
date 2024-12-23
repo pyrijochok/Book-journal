@@ -1,5 +1,12 @@
 const fastify = require('fastify')()
 const path = require('path')
+const mongoose = require("mongoose");
+const User = require("./models/user.model");
+const Entry = require("./models/entry.model");
+
+const authRoutes = require("./routes/auth.routes");
+const journalRoutes = require("./routes/journal.routes");
+const entryRoutes = require("./routes/entry.routes");
 
 // Serve static files from the React build folder inside `react-app`
 fastify.register(require('@fastify/static'), {
@@ -12,157 +19,137 @@ fastify.setNotFoundHandler((request, reply) => {
   reply.sendFile('index.html') // React's entry point
 })
 
-const users = [
-  {
-    id: 1,
-    nick: 'alina',
-    password: '123456',
-    email: 'alina@gmail.com'
-  }
-]
-
-const journalEntries = [
-  {
-    id: 1,
-    userId: 1,
-    title: 'Life Book',
-    date: '4-12-24',
-    author: 'Takara Moshi',
-    pages: 120,
-    entryText: 'Best book ever.',
-    rate: 10
-  }
-]
-
-
-fastify.get('/api/journal/:userId/:entryId', async (request, reply) => {
-    const entryId = parseInt(request.params.entryId, 10)
-    const entry = journalEntries.find((entry) => entry.id === entryId)
-    if (entry) {
-        return entry
-    } else {
-      reply.code(404).send({ message: 'Entry not found' })
-    }
+mongoose
+  .connect("mongodb+srv://tokarskaaalina:cuti1IY0DYFhgxSg@myfreecluster.teshg.mongodb.net/book-journal", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
+  .then(() => console.log("Connected to the database"))
+  .catch((e) => console.log("Error connecting to database", e));
 
 
-fastify.get('/api/journal/:userId', async (request, reply) => {
-  const userId = parseInt(request.params.userId, 10)
-  const entries = journalEntries.filter((entry) => entry.userId === userId)
-  if (entries) {
-    return entries
-  } else {
-    reply.code(404).send({ message: 'There are no entries' })
-  }
-})
-
-fastify.post('/api/login', (request, reply) => {
-  const { nick, password } = request.body
-
-  const user = users.find((u) => u.nick === nick && u.password === password)
-
-  if (user) {
-    reply.send({
-      success: true,
-      message: 'Login successful',
-      user: { id: user.id, nick: user.nick }
-    })
-  } else {
-    reply
-      .code(401)
-      .send({ success: false, message: 'Invalid email or password' })
-  }
-})
-
-fastify.post('/api/register', (request, reply) => {
-  const { nick, email, password } = request.body
-
-  const id = users.length + 1
-
-  const user = {
-    id: id,
-    nick: nick,
-    password: password,
-    email: email
-  }
-  users.push(user)
-  if (user) {
-    reply.send({
-      success: true,
-      message: 'Register successful',
-      user: { id: user.id, nick: user.nick },
-      usersArray: [users]
-    })
-  } else {
-    reply.code(401).send({ success: false, message: 'Error' })
-  }
-})
 
 
-fastify.post('/api/addentry/:userId', (request, reply) => {
-  const { title,author,pages, date,text, rate } = request.body
-  const userId = parseInt(request.params.userId, 10)
-  const entry = {
-    id:journalEntries.length + 1,
-    userId: userId,
-    title: title,
-    date: date,
-    author:author,
-    pages:pages,
-    entryText:text,
-    rate: rate
-  }
+// fastify.get('/api/journal/:userId/:entryId', async (request, reply) => {
+//   const entryId = parseInt(request.params.entryId, 10)
+// //   const entry = journalEntries.find((entry) => entry.id === entryId)
+//   try{
+//     const entry = await Entry.findOne({ id: entryId });
+//     return entry;
+//   }catch(error){
+//     reply.code(500).send({ message: 'Error fetching data', error: error.message });
+//   }
+ 
+// })
 
-  journalEntries.push(entry)
+// fastify.get('/api/journal/:userId', async (request, reply) => {
+//   const userId = parseInt(request.params.userId, 10)
+//   try {
+//     const entries = await Entry.find({ userId: userId });
+//     // if (entries.length > 0) {
+//       return entries;
+//     // } else {
+//     //   reply.code(404).send({ message: 'No entries found for this user.' });
+//     // }
+//   } catch (error) {
+//     reply.code(500).send({ message: 'Error fetching entries', error: error.message });
+//   }
+// })
 
-  if (entry) {
-    reply.send({
-      success: true,
-      message: 'Successful',
-      entries: journalEntries
-    })
-  } else {
-    reply.code(401).send({ success: false, message: 'Error' })
-  }
-})
+// fastify.post('/api/login', async (request, reply) => {
+//   const { nick, password } = request.body
 
-fastify.put('/api/updateentry/:entryId', (request, reply) => {
-    const { title,author,pages,text, rate } = request.body
-    const entryId = parseInt(request.params.entryId, 10)
-    const entry = journalEntries.find((entry) => entry.id === entryId)
-    entry.title = title;
-    entry.author = author;
-    entry.pages = pages;
-    entry.entryText = text;
-    entry.rate = rate;
+// //   const user = users.find((u) => u.nick === nick && u.password === password)
+//   const user = await User.findOne({nick:nick, password:password})
+
+//   if (user) {
+//     reply.send({
+//       success: true,
+//       message: 'Login successful',
+//       user: {id:user.id, nick:user.nick}
+//     })
+//   } else {
+//     reply
+//       .code(401)
+//       .send({ success: false, message: 'Invalid email or password' })
+//   }
+// })
+
+// fastify.post('/api/register', async (request, reply) => {
+//   const { nick, email, password } = request.body
+
+// //   
+
+//   try{
+//     const users = await User.find();
+//     const id = users.length + 1
+//     const user = new User({
+//         id: id,
+//         nick: nick,
+//         password: password,
+//         email: email
+//       });
+//     const result = await user.save();
+//     reply.send({result:result});
+//   }catch(error){
+//     reply.status(500).send(error);
+//   }
   
-    if (entry) {
-      reply.send({
-        success: true,
-        message: 'Successful',
-        entries: journalEntries
-      })
-    } else {
-      reply.code(401).send({ success: false, message: 'Error' })
-    }
-  })
+// })
 
-  fastify.delete('/api/deleteentry/:entryId', (request, reply) => {
-    const entryId = parseInt(request.params.entryId, 10)
-    const entry = journalEntries.find((entry) => entry.id === entryId)
-    const entryIndex = journalEntries.indexOf(entry)
-    journalEntries.splice(entryIndex,1)
+// fastify.post('/api/entry/add/:userId', async (request, reply) => {
+//   const { title, author, pages, text, rate } = request.body
+//   const userId = parseInt(request.params.userId, 10)
+
+//   try{
+
+//     const entry = new Entry({
+//         id: journalEntries.length + 1,
+//         userId: userId,
+//         title: title,
+//         author: author,
+//         pages: pages,
+//         entryText: text,
+//         rate: rate
+//       })
+//       const result = await entry.save();
+//       reply.send({result:result});
+
+//   }catch(error){
+//     reply.status(500).send(error);
+//   }
   
-    if (entry) {
-      reply.send({
-        success: true,
-        message: 'Successful',
-        deleted:entry
-      })
-    } else {
-      reply.code(401).send({ success: false, message: 'Error' })
-    }
-  })
+// })
+
+// fastify.put('/api/entry/update/:entryId', async (request, reply) => {
+//   const { title, author, pages, text, rate } = request.body
+//   const entryId = parseInt(request.params.entryId, 10)
+//   try{
+//     const entry = await Entry.findOneAndUpdate({id:entryId},{title:title,author:author,pages:pages,text:text,rate:rate})
+//     reply.send({entry:entry});
+//   }catch(error){
+//     reply.status(500).send(error);
+//   }
+  
+
+// })
+
+// fastify.delete('/api/entry/delete/:entryId', async (request, reply) => {
+//   const entryId = parseInt(request.params.entryId, 10)
+
+//   try{
+//     const entry = await Entry.findOneAndDelete({id:entryId})
+//     reply.send({deleted:entry})
+//   }
+//   catch(error){
+//     reply.status(500).send(error);
+//   }
+ 
+// })
+
+fastify.register(authRoutes, { prefix: "/api" });
+fastify.register(journalRoutes, { prefix: "/api/journal" });
+fastify.register(entryRoutes, { prefix: "/api/entry" });
 
 // Start the server
 const start = async () => {

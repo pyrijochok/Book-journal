@@ -5,7 +5,7 @@ export default function Nav({ userId }) {
   const navigate = useNavigate()
 
   const logOut = () => {
-    navigate('/login')
+    navigate('/')
   }
   const openJournal = () => {
     navigate(`/journal/${userId}`)

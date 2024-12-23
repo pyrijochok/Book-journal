@@ -6,8 +6,7 @@ export default function LogIn() {
   const [password, setPassword] = useState('')
   const [message, setMessage] = useState('')
   const navigate = useNavigate()
-  const [isAuth,setAuth]=useState(false)
-  let userId = null;
+  const [isAuth, setAuth] = useState(false)
 
   const handleLogin = async (e) => {
     e.preventDefault()
@@ -24,9 +23,8 @@ export default function LogIn() {
       const data = await response.json()
 
       if (response.ok) {
-        // setMessage(`Welcome, ${data.user.nick}!`);
-        userId = data.user.id
-        console.log(userId)
+        const userId = data.user._id
+        console.log(data.user)
         navigate(`/journal/${userId}`)
         setAuth(true)
       } else {
@@ -38,10 +36,9 @@ export default function LogIn() {
     }
   }
 
-  useEffect(()=>{
-    localStorage.setItem('isAuth',JSON.stringify(isAuth))
-  },[isAuth])
-
+  useEffect(() => {
+    localStorage.setItem('isAuth', JSON.stringify(isAuth))
+  }, [isAuth])
 
   const openRegister = () => {
     navigate('/register')

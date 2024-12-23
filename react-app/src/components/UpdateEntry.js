@@ -4,74 +4,68 @@ import Nav from './Nav'
 
 export default function UpdateEntry() {
   let { userId } = useParams()
-  let {entryId} = useParams()
-  
+  let { entryId } = useParams()
+
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [pages,setPages] = useState('')
-  const [text,setText] = useState('')
+  const [pages, setPages] = useState('')
+  const [text, setText] = useState('')
   const [rate, setRate] = useState('')
   const [message, setMessage] = useState('')
 
   const navigate = useNavigate()
 
-const [entry, setEntry] = useState(null)
+  const [entry, setEntry] = useState(null)
 
+  useEffect(() => {
+    const isAuth = JSON.parse(localStorage.getItem('isAuth'))
+    if (isAuth === false) {
+      console.log(isAuth)
+      navigate('/')
+    }
+  }, [])
 
-  useEffect(()=>{
-      const isAuth = JSON.parse(localStorage.getItem('isAuth'));
-      if(isAuth===false){
-        console.log(isAuth)
-        navigate('/login');
-      }
-    },[])
+  useEffect(() => {
+    fetch(`/api/journal/${userId}/${entryId}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setEntry(data)
+      })
+      .catch((error) => console.error('Error fetching data:', error))
+  }, [entryId])
 
-    useEffect(() => {
-        fetch(`/api/journal/${userId}/${entryId}`)
-          .then((response) => response.json())
-          .then((data) => {
-              setEntry(data)
-          })
-          .catch((error) => console.error('Error fetching data:', error))
-      }, [entryId])
-    
+  useEffect(() => {
+    if (entry) {
+      setTitle(entry.title || '')
+      setAuthor(entry.author || '')
+      setPages(entry.pages || '')
+      setText(entry.entryText || '')
+      setRate(entry.rate || '')
+    }
+  }, [entry])
 
-      useEffect(() => {
-        if (entry) {
-          setTitle(entry.title || '')
-          setAuthor(entry.author || '')
-          setPages(entry.pages || '')
-          setText(entry.entryText || '')
-          setRate(entry.rate || '')
-        }
-      }, [entry])
-
-      if (!entry) {
-        return <div>Loading...</div>
-      }
-
-
+  if (!entry) {
+    return <div>Loading...</div>
+  }
 
   const handleUpdateEntry = async (e) => {
     e.preventDefault()
     console.log('entryUpdated')
     try {
-      const response = await fetch(`/api/updateentry/${entryId}`, {
+      const response = await fetch(`/api/entry/update/${entryId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ title,author, pages,text,rate })
+        body: JSON.stringify({ title, author, pages, text, rate })
       })
 
       const data = await response.json()
 
       if (response.ok) {
-        console.log(data.entries)
+        console.log(data.entry)
         navigate(`/journal/${userId}`)
-      } else {
-        setMessage(data.message)
-      }
+      } 
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('error:', error)
@@ -80,7 +74,7 @@ const [entry, setEntry] = useState(null)
 
   return (
     <div>
-    <Nav userId={userId} />
+      <Nav userId={userId} />
       <h1>Update entry</h1>
       <form onSubmit={handleUpdateEntry}>
         <div>
@@ -109,8 +103,10 @@ const [entry, setEntry] = useState(null)
         </div>
         <div>
           <label>Text:</label>
-          <textarea value={text} onChange={(e) => setText(e.target.value)}>
-          </textarea>
+          <textarea
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          ></textarea>
         </div>
         <div>
           <label>Rate:</label>
