@@ -1,4 +1,4 @@
-# Book Journal
+# Book journal
 
 App structure(lab 3)
 
