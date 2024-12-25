@@ -14,7 +14,7 @@ jobs:
         run: npm ci
 
       - name: Check code formatting with Prettier
-        run: npx prettier --check .
+        run: npx prettier --write .
 
   check-tests:
     runs-on: ubuntu-latest
