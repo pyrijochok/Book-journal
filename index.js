@@ -162,4 +162,10 @@ const start = async () => {
   }
 }
 
-start()
+// Start the server if not in test environment
+if (require.main === module) {
+  start();
+}
+
+module.exports = fastify; 
+

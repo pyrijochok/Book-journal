@@ -18,7 +18,7 @@ export default function Journal() {
   useEffect(() => {
     fetch(`/api/journal/${userId}`)
       .then((response) => response.json())
-      .then((data) => setEntries(data))
+      .then((data) => setEntries(data.entries))
       .catch((error) => console.error('Error fetching data:', error))
   }, [userId])
 

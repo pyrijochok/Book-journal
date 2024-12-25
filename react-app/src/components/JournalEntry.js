@@ -20,7 +20,7 @@ export default function JournalEntry() {
     fetch(`/api/journal/${userId}/${entryId}`)
       .then((response) => response.json())
       .then((data) => {
-        setEntry(data)
+        setEntry(data.entry)
       })
       .catch((error) => console.error('Error fetching data:', error))
   }, [entryId])

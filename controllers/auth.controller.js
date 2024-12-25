@@ -3,8 +3,7 @@ const User = require("../models/user.model");
 
 async function Login (request, reply) {
     const { nick, password } = request.body
-  
-  //   const user = users.find((u) => u.nick === nick && u.password === password)
+
     const user = await User.findOne({nick:nick, password:password})
   
     if (user) {
