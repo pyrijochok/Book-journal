@@ -2,7 +2,7 @@ name: CI Workflow
 on:
   pull_request:
     branches:
-      - main
+      - master
 jobs:
   check-formatting:
     runs-on: ubuntu-latest
