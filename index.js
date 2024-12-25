@@ -3,7 +3,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const User = require('./models/user.model')
 const Entry = require('./models/entry.model')
-require('dotenv').config();
+require('dotenv').config()
 
 const authRoutes = require('./routes/auth.routes')
 const journalRoutes = require('./routes/journal.routes')
@@ -21,12 +21,10 @@ fastify.setNotFoundHandler((request, reply) => {
 })
 
 mongoose
-  .connect( process.env.MONGO_URI,
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
-    }
-  )
+  .connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  })
   .then(() => console.log('Connected to the database'))
   .catch((e) => console.log('Error connecting to database', e))
 
