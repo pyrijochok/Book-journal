@@ -6,7 +6,7 @@ export default function AddEntry() {
   let { userId } = useParams()
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-//   const [date, setDate] = useState('')
+  //   const [date, setDate] = useState('')
   const [pages, setPages] = useState('')
   const [text, setText] = useState('')
   const [rate, setRate] = useState('')
@@ -38,7 +38,7 @@ export default function AddEntry() {
       if (response.ok) {
         console.log(data.result)
         navigate(`/journal/${userId}`)
-      } 
+      }
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('error:', error)

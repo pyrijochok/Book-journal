@@ -1,12 +1,12 @@
 const fastify = require('fastify')()
 const path = require('path')
-const mongoose = require("mongoose");
-const User = require("./models/user.model");
-const Entry = require("./models/entry.model");
+const mongoose = require('mongoose')
+const User = require('./models/user.model')
+const Entry = require('./models/entry.model')
 
-const authRoutes = require("./routes/auth.routes");
-const journalRoutes = require("./routes/journal.routes");
-const entryRoutes = require("./routes/entry.routes");
+const authRoutes = require('./routes/auth.routes')
+const journalRoutes = require('./routes/journal.routes')
+const entryRoutes = require('./routes/entry.routes')
 
 // Serve static files from the React build folder inside `react-app`
 fastify.register(require('@fastify/static'), {
@@ -20,15 +20,15 @@ fastify.setNotFoundHandler((request, reply) => {
 })
 
 mongoose
-  .connect("mongodb+srv://tokarskaaalina:cuti1IY0DYFhgxSg@myfreecluster.teshg.mongodb.net/book-journal", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connected to the database"))
-  .catch((e) => console.log("Error connecting to database", e));
-
-
-
+  .connect(
+    'mongodb+srv://tokarskaaalina:cuti1IY0DYFhgxSg@myfreecluster.teshg.mongodb.net/book-journal',
+    {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    }
+  )
+  .then(() => console.log('Connected to the database'))
+  .catch((e) => console.log('Error connecting to database', e))
 
 // fastify.get('/api/journal/:userId/:entryId', async (request, reply) => {
 //   const entryId = parseInt(request.params.entryId, 10)
@@ -39,7 +39,7 @@ mongoose
 //   }catch(error){
 //     reply.code(500).send({ message: 'Error fetching data', error: error.message });
 //   }
- 
+
 // })
 
 // fastify.get('/api/journal/:userId', async (request, reply) => {
@@ -78,7 +78,7 @@ mongoose
 // fastify.post('/api/register', async (request, reply) => {
 //   const { nick, email, password } = request.body
 
-// //   
+// //
 
 //   try{
 //     const users = await User.find();
@@ -94,7 +94,7 @@ mongoose
 //   }catch(error){
 //     reply.status(500).send(error);
 //   }
-  
+
 // })
 
 // fastify.post('/api/entry/add/:userId', async (request, reply) => {
@@ -118,7 +118,7 @@ mongoose
 //   }catch(error){
 //     reply.status(500).send(error);
 //   }
-  
+
 // })
 
 // fastify.put('/api/entry/update/:entryId', async (request, reply) => {
@@ -130,7 +130,6 @@ mongoose
 //   }catch(error){
 //     reply.status(500).send(error);
 //   }
-  
 
 // })
 
@@ -144,12 +143,12 @@ mongoose
 //   catch(error){
 //     reply.status(500).send(error);
 //   }
- 
+
 // })
 
-fastify.register(authRoutes, { prefix: "/api" });
-fastify.register(journalRoutes, { prefix: "/api/journal" });
-fastify.register(entryRoutes, { prefix: "/api/entry" });
+fastify.register(authRoutes, { prefix: '/api' })
+fastify.register(journalRoutes, { prefix: '/api/journal' })
+fastify.register(entryRoutes, { prefix: '/api/entry' })
 
 // Start the server
 const start = async () => {
@@ -164,8 +163,7 @@ const start = async () => {
 
 // Start the server if not in test environment
 if (require.main === module) {
-  start();
+  start()
 }
 
-module.exports = fastify; 
-
+module.exports = fastify

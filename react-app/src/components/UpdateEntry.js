@@ -65,7 +65,7 @@ export default function UpdateEntry() {
       if (response.ok) {
         console.log(data.entry)
         navigate(`/journal/${userId}`)
-      } 
+      }
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('error:', error)

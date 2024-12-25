@@ -26,7 +26,6 @@ export default function Journal() {
     return <div>Loading...</div>
   }
 
-
   const openEntry = (e, entryId) => {
     e.preventDefault()
     navigate(`/entry/${userId}/${entryId}`)
@@ -39,26 +38,24 @@ export default function Journal() {
 
   const deleteEntry = async (e, entryId) => {
     e.preventDefault()
-      try {
-        const response = await fetch(`/api/entry/delete/${entryId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ entryId: entryId })
-        })
-  
-        const data = await response.json()
-  
-        if (response.ok) {
-          console.log(data.deleted)
-          window.location.reload()
-        } 
-      } catch (error) {
-        console.error('error:', error)
+    try {
+      const response = await fetch(`/api/entry/delete/${entryId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ entryId: entryId })
+      })
+
+      const data = await response.json()
+
+      if (response.ok) {
+        console.log(data.deleted)
+        window.location.reload()
       }
-    
-  
+    } catch (error) {
+      console.error('error:', error)
+    }
   }
 
   const addEntry = () => {
@@ -69,26 +66,26 @@ export default function Journal() {
     <div>
       <Nav userId={userId} />
       <h1>Journal</h1>
-      {journalEntries.length===0?(
+      {journalEntries.length === 0 ? (
         <div>User has no entries yet</div>
-      ):(
-      <ul>
-        {journalEntries.map((entry) => (
-        <li key={entry._id}>
-          <h2>{entry.title}</h2>
-          <p>
-            <strong>Date:</strong> {new Date(entry.date).toDateString()}
-          </p>
-          <p>
-            <strong>Rate:</strong> {entry.rate}
-          </p>
-          <button onClick={(e) => openEntry(e, entry._id)}>Open</button>
-          <button onClick={(e) => updateEntry(e, entry._id)}>Update</button>
-          <button onClick={(e) => deleteEntry(e, entry._id)}>Delete</button>
-        </li>
-      ))}
-      </ul>
-    )}
+      ) : (
+        <ul>
+          {journalEntries.map((entry) => (
+            <li key={entry._id}>
+              <h2>{entry.title}</h2>
+              <p>
+                <strong>Date:</strong> {new Date(entry.date).toDateString()}
+              </p>
+              <p>
+                <strong>Rate:</strong> {entry.rate}
+              </p>
+              <button onClick={(e) => openEntry(e, entry._id)}>Open</button>
+              <button onClick={(e) => updateEntry(e, entry._id)}>Update</button>
+              <button onClick={(e) => deleteEntry(e, entry._id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      )}
       <button onClick={addEntry}>Add entry</button>
     </div>
   )

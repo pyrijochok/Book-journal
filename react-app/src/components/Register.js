@@ -25,7 +25,7 @@ export default function Register() {
       if (response.ok) {
         console.log(data.result)
         navigate('/')
-      } 
+      }
     } catch (error) {
       setMessage('An error occurred. Please try again.')
       console.error('Registration error:', error)
