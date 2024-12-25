@@ -3,6 +3,7 @@ const path = require('path')
 const mongoose = require('mongoose')
 const User = require('./models/user.model')
 const Entry = require('./models/entry.model')
+require('dotenv').config();
 
 const authRoutes = require('./routes/auth.routes')
 const journalRoutes = require('./routes/journal.routes')
@@ -20,8 +21,7 @@ fastify.setNotFoundHandler((request, reply) => {
 })
 
 mongoose
-  .connect(
-    'mongodb+srv://tokarskaaalina:cuti1IY0DYFhgxSg@myfreecluster.teshg.mongodb.net/book-journal',
+  .connect(process.env.MONGO_URI,
     {
       useNewUrlParser: true,
       useUnifiedTopology: true
